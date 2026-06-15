@@ -76,3 +76,13 @@ def send_screenshot(message):
             os.remove('image.png')
             bot.send_message(message.chat.id,"изображение удалено", parse_mode="HTML")
         else: pass
+
+@bot.message_handler(commands=["t"])
+def type_it(message):
+    if message.from_user.username == admin_username and message.from_user.id == admin_id:
+        text = message.text
+        text = text.removeprefix("/t ")
+        keyboard.write(text)
+    else: pass
+
+bot.infinity_polling()
