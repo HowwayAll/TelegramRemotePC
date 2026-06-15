@@ -8,7 +8,6 @@ from functools import wraps
 
 token = "your_bot_token"
 admin_id = 1234567890
-admin_username = "username"
 
 bot = telebot.TeleBot(token)
 
