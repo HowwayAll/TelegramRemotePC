@@ -12,7 +12,26 @@ admin_username = "username"
 
 bot = telebot.TeleBot(token)
 
-
+LANGS = {
+    "ru": {
+          "granted": "<i>доступ разрешён</i>",
+          "sleep": "<i>отправка ПК ко сну</i>",
+          "wakeup": "<i>ПК снова активен</i>",
+          "turnoff": "<i>выключение ПК</i>",
+          "reboot": "<i>перезагрузка ПК</i>",
+          "image_created": "<i>изображение создано</i>",
+          "image_delted": "<i>изображение удалено</i>"
+    },
+    "en": {
+          "granted": "<i>access granted</i>",
+          "sleep": "<i>sending PC to sleep</i>",
+          "wakeup": "<i>PC is activated again</i>",
+          "turnoff": "<i>turning off PC</i>",
+          "reboot": "<i>rebooting PC</i>",
+          "image_created": "<i>image created</i>",
+          "image_delted": "<i>image deleted</i>"    
+    }
+}
 
 def access_checker(func):
     @wraps(func)
@@ -21,66 +40,64 @@ def access_checker(func):
             return func(message, *args, **kwargs)
         else:
             return None
+    return wrapper
+
+def get_text(message, key):
+     user_lang = message.from_user.language_code
+     lang_pack = LANGS.get(user_lang, LANGS['en'])
+     return lang_pack.get(key, "Error: missing text")
+
 
 
 
 @bot.message_handler(commands=["start"])
 @access_checker
 def send_welcome(message):
-    bot.send_message(message.chat.id, "<i>доступ разрешён</i>", parse_mode="HTML")
+    text = get_text(message, "granted")
+    bot.send_message(message.chat.id, text, parse_mode="HTML")
 
 @bot.message_handler(commands=["sleep", "s"])
 @access_checker
 def go_sleep(message):
-        bot.send_message(message.chat.id, "<i>доступ разрешён</i>", parse_mode="HTML")
-        bot.send_message(message.chat.id, "<i>отправка ПК ко сну</i>", parse_mode="HTML")
+        text = get_text(message, "granted")
+        bot.send_message(message.chat.id, text, parse_mode="HTML")
+        text = get_text(message, "sleep")
+        bot.send_message(message.chat.id, text, parse_mode="HTML")
         os.system("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
-        bot.send_message(message.chat.id, "<i>ПК проснулся</i>", parse_mode="HTML")
+        text = get_text(message, "wakeup")
+        bot.send_message(message.chat.id, text, parse_mode="HTML")
 
 @bot.message_handler(commands=["poweroff", "po"])
 @access_checker
 def go_out(message):
-        bot.send_message(message.chat.id, "<i>доступ разрешён</i>", parse_mode="HTML")
-        bot.send_message(message.chat.id, "<i>выключение ПК</i>", parse_mode="HTML")
+        text = get_text(message, "granted")
+        bot.send_message(message.chat.id, text, parse_mode="HTML")
+        text = get_text(message, "turnoff")
+        bot.send_message(message.chat.id, text, parse_mode="HTML")
         os.system("shutdown /s /t 0")
-
-@bot.message_handler(commands=["force poweroff", "fpo"])
-@access_checker
-def force_out(message):
-        bot.send_message(message.chat.id, "<i>доступ разрешён</i>", parse_mode="HTML")
-        bot.send_message(message.chat.id, "<i>принудительное выключение ПК</i>", parse_mode="HTML")
-        os.system("shutdown /s /f /t 0")
 
 @bot.message_handler(commands=["reboot", "r"])
 @access_checker
 def go_reboot(message):
-        bot.send_message(message.chat.id, "<i>доступ разрешён</i>", parse_mode="HTML")
-        bot.send_message(message.chat.id, "<i>перезагрузка ПК</i>", parse_mode="HTML")
+        text = get_text(message, "granted")
+        bot.send_message(message.chat.id, text, parse_mode="HTML")
+        text = get_text(message, "reboot")
+        bot.send_message(message.chat.id, text, parse_mode="HTML")
         os.system("shutdown /r /t 0")
-
-@bot.message_handler(commands=["force reboot", "fr"])
-@access_checker
-def force_reboot(message):
-        bot.send_message(message.chat.id, "<i>доступ разрешён</i>", parse_mode="HTML")
-        bot.send_message(message.chat.id, "<i>принудительная перезагрузка ПК</i>", parse_mode="HTML")
-        os.system("shutdown /r /f /t 0")
-
-@bot.message_handler(commands=['status'])
-@access_checker
-def send_status(message):
-        bot.send_message(message.chat.id, "<i>доступ разрешён</i>", parse_mode="HTML")
-        bot.send_message(message.chat.id, "<i>Состояние ПК\n\nстатус: активен</i>", parse_mode="HTML")
 
 @bot.message_handler(commands=["screenshot", "ss"])
 @access_checker
 def send_screenshot(message):
-        bot.send_message(message.chat.id, "<i>доступ разрешён</i>", parse_mode="HTML")
+        text = get_text(message, "granted")
+        bot.send_message(message.chat.id, text, parse_mode="HTML")
         screenshot = pyautogui.screenshot("image.png")
-        bot.send_message(message.chat.id, "<i>изображение создано</i>", parse_mode="HTML")
+        text = get_text(message, "image_created")
+        bot.send_message(message.chat.id, text, parse_mode="HTML")
         with open('image.png', 'rb') as image:
             bot.send_photo(message.chat.id, image)
         os.remove('image.png')
-        bot.send_message(message.chat.id,"изображение удалено", parse_mode="HTML")
+        text = get_text(message, "image_deleted")
+        bot.send_message(message.chat.id, text, parse_mode="HTML")
 
 @bot.message_handler(commands=["t"])
 @access_checker
