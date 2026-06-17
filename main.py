@@ -1,3 +1,8 @@
+
+# добавить /resources которая отправляет загруженность ЦП / ВИДЕОКАРТЫ / ОЗУ / и другое...
+# добавить /volume [0-100] для управления звуком PYCAWD
+# добавить логирование
+
 import telebot
 
 import os
@@ -6,8 +11,11 @@ import keyboard
 
 from functools import wraps
 
-token = "your_bot_token"
-admin_id = 1234567890
+from config import TELEGRAM_ID
+from config import TOKEN
+
+token = TOKEN
+admin_id = TELEGRAM_ID
 
 bot = telebot.TeleBot(token)
 
@@ -19,7 +27,7 @@ LANGS = {
           "turnoff": "<i>выключение ПК</i>",
           "reboot": "<i>перезагрузка ПК</i>",
           "image_created": "<i>изображение создано</i>",
-          "image_delted": "<i>изображение удалено</i>"
+          "image_deleted": "<i>изображение удалено</i>"
     },
     "en": {
           "granted": "<i>access granted</i>",
@@ -28,7 +36,7 @@ LANGS = {
           "turnoff": "<i>turning off PC</i>",
           "reboot": "<i>rebooting PC</i>",
           "image_created": "<i>image created</i>",
-          "image_delted": "<i>image deleted</i>"    
+          "image_deleted": "<i>image deleted</i>"    
     }
 }
 
@@ -41,10 +49,28 @@ def access_checker(func):
             return None
     return wrapper
 
+def error_catcher(func):
+    @wraps(func)
+    def wrapper(message, *args, **kwargs):
+        try:
+            return func(message, *args, **kwargs)
+        except Exception as e:
+            print(f"Error in {func.__name__}: {e}")
+            return None
+    return wrapper
+
+def logger(func):
+    @wraps(func)
+    def wrapper(message, *args, **kwargs):
+        user = message.from_user
+        print(f"User {user.id} ({user.username}) called {func.__name__} with args: {args} kwargs: {kwargs}")
+        return func(message, *args, **kwargs)
+    return wrapper
+
 def get_text(message, key):
      user_lang = message.from_user.language_code
      lang_pack = LANGS.get(user_lang, LANGS['en'])
-     return lang_pack.get(key, "Error: missing text")
+     return lang_pack.get(key, "Error: missing text / check dictionary")
 
 
 
@@ -57,6 +83,7 @@ def send_welcome(message):
 
 @bot.message_handler(commands=["sleep", "s"])
 @access_checker
+@error_catcher
 def go_sleep(message):
         text = get_text(message, "granted")
         bot.send_message(message.chat.id, text, parse_mode="HTML")
@@ -68,6 +95,7 @@ def go_sleep(message):
 
 @bot.message_handler(commands=["poweroff", "po"])
 @access_checker
+@error_catcher
 def go_out(message):
         text = get_text(message, "granted")
         bot.send_message(message.chat.id, text, parse_mode="HTML")
@@ -77,6 +105,7 @@ def go_out(message):
 
 @bot.message_handler(commands=["reboot", "r"])
 @access_checker
+@error_catcher
 def go_reboot(message):
         text = get_text(message, "granted")
         bot.send_message(message.chat.id, text, parse_mode="HTML")
@@ -86,6 +115,7 @@ def go_reboot(message):
 
 @bot.message_handler(commands=["screenshot", "ss"])
 @access_checker
+@error_catcher
 def send_screenshot(message):
         text = get_text(message, "granted")
         bot.send_message(message.chat.id, text, parse_mode="HTML")
@@ -100,9 +130,30 @@ def send_screenshot(message):
 
 @bot.message_handler(commands=["t"])
 @access_checker
+@error_catcher
 def type_it(message):
     text = message.text
-    text = text.removeprefix("/t ")
-    keyboard.write(text)
+    text = text.removeprefix("/t")
+    if text == "":
+        return None
+    else:
+        text = text.removeprefix(" ")
+        keyboard.write(text)
 
-bot.infinity_polling()
+
+@bot.message_handler(commands=["kill"])
+@access_checker
+@error_catcher
+def kill_task(message):
+    text = message.text
+    text = text.removeprefix("/kill")
+    if text == "":
+        return None
+    else:
+        text = text.removeprefix(" ")
+        os.system(f"taskkill /f /im {text}")
+
+
+
+if __name__ == "__main__":
+    bot.infinity_polling()
