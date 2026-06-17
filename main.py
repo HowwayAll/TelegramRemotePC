@@ -1,3 +1,6 @@
+
+# Я КОММИТИЛ ЭТО ВСЁ НЕ С ТОЙ ПОЧТЫ
+
 import telebot
 
 from config import TOKEN
