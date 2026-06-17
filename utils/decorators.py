@@ -12,3 +12,17 @@ def access_checker(bot):
                 bot.send_message(message.chat.id, "<i>Неизвестная команда</i>", parse_mode="HTML")
                 return None
         return wrapper
+    return decorator
+
+def get_errors(bot):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except Exception as error:
+                message = next((arg for arg in args if hasattr(arg, 'chat')), None)
+                if message:
+                    bot.send_message(message.chat.id, f"<i>Непредвиденная ошибка: {error}</i>", parse_mode="HTML")
+        return wrapper
+    return decorator
