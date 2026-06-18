@@ -47,40 +47,5 @@ This Python script can give you access to control your PC from a Telegram Bot.
     ```bash
     pyinstaller --onefile main.py
     ```
-
-## Usage
-
-1. Run the script using Python:
-
-    ```bash
-    python
-    ```
-
-2. The script will:
-   - Unmute
-   - Set
-
-   If successful
-
-## Code Overview
-
-The
-
-- Retrieves
-- Activates
-- Checks 
-- Sets 
-
-## Notes
-- Important: Ensure you 
-- The script
-
-## Troubleshooting
-If you encounter an error, ensure:
-
-- The 
-- The 
-- Python 
-  
+ 
 ## License
-This project 
