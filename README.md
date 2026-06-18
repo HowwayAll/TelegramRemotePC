@@ -35,7 +35,17 @@ This Python script can give you access to control your PC from a Telegram Bot.
 
     ```bash
     echo TOKEN="xxxxxxxxxxxxx:XXXXXXXXXXXXXXX" > config.py
+    ```
+    get token from @botfather
+    ```bash
     echo TELEGRAM_ID=1234567890 >> config.py
+    ```
+    get id from @userinfobot
+
+4. Compilate your project
+
+    ```bash
+    pyinstaller --onefile main.py
     ```
 
 ## Usage
@@ -43,7 +53,7 @@ This Python script can give you access to control your PC from a Telegram Bot.
 1. Run the script using Python:
 
     ```bash
-    python set_volume.py
+    python
     ```
 
 2. The script will:
