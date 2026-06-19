@@ -11,10 +11,3 @@
  +----
  +---/kill string.exe
  +----
- +---# /mute
- +----
- +---# /volume 0-100 /vol 0-100
- +----
- +---# /getvolume /volume /getvol /vol
- +----
- +---# add logger

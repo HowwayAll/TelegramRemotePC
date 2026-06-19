@@ -1,8 +1,8 @@
 from utils.decorators import access_checker
 from utils.decorators import get_errors
-import os
 import pyautogui
 import keyboard
+import subprocess
 
 def setup_handlers(bot):
 
@@ -17,7 +17,7 @@ def setup_handlers(bot):
     @get_errors(bot)
     def go_sleep(message):
             bot.send_message(message.chat.id, "<i>Отправка ПК ко сну</i>", parse_mode="HTML")
-            os.system("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
+            subprocess.run("rundll32.exe powrprof.dll,SetSuspendState 0,1,0", shell=True)
             bot.send_message(message.chat.id, "<i>ПК проснулся</i>", parse_mode="HTML")
 
     @bot.message_handler(commands=["poweroff", "po"])
@@ -25,14 +25,14 @@ def setup_handlers(bot):
     @get_errors(bot)
     def go_out(message):
             bot.send_message(message.chat.id, "<i>Выключение ПК</i>", parse_mode="HTML")
-            os.system("shutdown /s /t 0")
+            subprocess.run("shutdown /s /t 0", shell=True)
 
     @bot.message_handler(commands=["reboot", "r"])
     @access_checker(bot)
     @get_errors(bot)
     def go_reboot(message):
             bot.send_message(message.chat.id, "<i>Перезагрузка ПК</i>", parse_mode="HTML")
-            os.system("shutdown /r /t 0")
+            subprocess.run("shutdown /r /t 0", shell=True)
 
     @bot.message_handler(commands=["screenshot", "ss"])
     @access_checker(bot)
@@ -42,7 +42,7 @@ def setup_handlers(bot):
             bot.send_message(message.chat.id, "<i>Изображение создано</i>", parse_mode="HTML")
             with open('image.png', 'rb') as image:
                 bot.send_photo(message.chat.id, image)
-            os.remove('image.png')
+            subprocess.run("del image.png", shell=True)
             bot.send_message(message.chat.id, "<i>Изображение удалено</i>", parse_mode="HTML")
 
     @bot.message_handler(commands=["t"])
@@ -52,6 +52,7 @@ def setup_handlers(bot):
         text = message.text
         text = text.removeprefix("/t")
         if text == "":
+            bot.send_message(message.chat.id, "<i>Текст не указан</i>", parse_mode="HTML")
             return None
         else:
             text = text.removeprefix(" ")
@@ -66,7 +67,8 @@ def setup_handlers(bot):
         text = message.text
         text = text.removeprefix("/kill")
         if text == "":
+            bot.send_message(message.chat.id, "<i>Имя процесса не указано</i>", parse_mode="HTML")
             return None
         else:
             text = text.removeprefix(" ")
-            os.system(f"taskkill /f /im {text}")
+            bot.send_message(message.chat.id, f"<i>{subprocess.run(f"taskkill /im {text} /f", shell=True, text=True, encoding="cp866", capture_output=True).stdout}</i>", parse_mode="HTML")
