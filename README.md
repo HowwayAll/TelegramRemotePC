@@ -1,8 +1,8 @@
 # telegram-remote-pc
 # telegram-bot
 
-> [!WARNING]
-> THIS PROJECT CANNOT BE COMPILED RIGHT NOW. I am working on a fix!
+> [!TIP]
+> I AM STILL WORKING ON THIS PROJECT. BUT YOU CAN STILL USE IT.
 
 This Python script can give you access to control your PC from a Telegram Bot.
 
