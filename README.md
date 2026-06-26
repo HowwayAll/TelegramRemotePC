@@ -1,17 +1,23 @@
 # telegram-remote-pc
 # telegram-bot
 
-# ! WARNING ! <br> THIS PROJECT CAN NOT COMPILATED RIGHT NOW  <br>
+> [!WARNING]
+> THIS PROJECT CANNOT BE COMPILED RIGHT NOW. I am working on a fix!
 
 This Python script can give you access to control your PC from a Telegram Bot.
 
 ## Features
 
-- Remote control
-- Many of functions
-- Easy to install
-- Tested on Windows 11
-- 100% Working on Windows 11
+- **Turn Off PC**
+- **Reboot PC**
+- **Send PC to sleep**
+- **Get screenshot and send it**
+- **Type something (pressing buttons)**
+- **Kill the process**
+- **Execute a command**
+- **Easy to install**
+- **Tested on Windows 11**
+- **100% functional on Windows 11**
 
 ## Prerequisites
 
@@ -44,10 +50,11 @@ This Python script can give you access to control your PC from a Telegram Bot.
     ```
     get id from @userinfobot
 
-4. Compilate your project
+4. Compile your project
 
     ```bash
     pyinstaller --onefile main.py
     ```
  
 ## License
+**This project is licensed under the MIT License - see the LICENSE file for details.**
