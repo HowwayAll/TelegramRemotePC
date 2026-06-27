@@ -2,7 +2,7 @@
 # telegram-bot
 
 > [!TIP]
-> I AM STILL WORKING ON THIS PROJECT. BUT YOU CAN STILL USE IT.
+> I AM STILL WORKING ON THIS PROJECT.
 
 This Python script can give you access to control your PC from a Telegram Bot.
 
